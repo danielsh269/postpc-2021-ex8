@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/seperator"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@color/design_default_color_secondary"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/rootsForView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seperator"
+        android:layout_marginTop="17dp"
+        android:text="Calculating roots for 000"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/theRoots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/rootsForView"
+        app:layout_constraintTop_toBottomOf="@id/seperator"
+        android:text=" ..."
+        android:layout_marginTop="17dp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seperator"        android:src="@android:drawable/ic_delete"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="20dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteButton" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

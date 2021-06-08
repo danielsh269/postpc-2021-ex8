@@ -52,9 +52,11 @@ public class RootsHolder implements Serializable {
             long number = Long.parseLong(split[0]);
             boolean status = Boolean.parseBoolean(split[1]);
             String roots = split[2];
+            int progress = Integer.parseInt(split[3]);
             RootCalc item = new RootCalc(number);
             item.setDone(status);
             item.setRoots(roots);
+            item.setProgress(progress);
             return item;
         }
         catch (Exception e)
@@ -114,7 +116,7 @@ public class RootsHolder implements Serializable {
 
     public String itemToString(RootCalc item)
     {
-        return item.getNumber() + "#" + item.isDone() + '#' + item.getRoots();
+        return item.getNumber() + "#" + item.isDone() + '#' + item.getRoots() + "#" + item.getProgress();
     }
     private static class RootComparator implements Comparator<RootCalc> {
         @Override
