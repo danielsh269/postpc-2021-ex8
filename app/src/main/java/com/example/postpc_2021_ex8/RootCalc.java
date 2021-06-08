@@ -19,9 +19,9 @@ public class RootCalc implements Serializable {
         return this.status;
     }
 
-    public void setDone()
+    public void setDone(boolean status)
     {
-        this.status = true;
+        this.status = status;
     }
 
     public void calculateRoots()
@@ -35,7 +35,10 @@ public class RootCalc implements Serializable {
             }
         }
     }
-
+    public void setRoots(String roots)
+    {
+        this.roots = roots;
+    }
     public String getRoots()
     {
         if (!this.status)
@@ -44,5 +47,10 @@ public class RootCalc implements Serializable {
         }
 
         return this.roots;
+    }
+
+    public long getNumber()
+    {
+        return this.number;
     }
 }
