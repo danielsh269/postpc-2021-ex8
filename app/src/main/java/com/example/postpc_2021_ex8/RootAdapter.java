@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkManager;
 
 public class RootAdapter extends RecyclerView.Adapter<ViewRootHolder> {
 
@@ -37,21 +38,23 @@ public class RootAdapter extends RecyclerView.Adapter<ViewRootHolder> {
         RootCalc item = this.holder.rootList.get(position);
         if (item.isDone())
         {
-            String str = "Roots for " + item.getNumber();
+            String str = "Roots for " + item.getNumber() + ": ";
             holder.numberView.setText(str);
             holder.rootsView.setText(item.getRoots());
             holder.progressBar.setVisibility(View.GONE);
         }
         else
         {
-            String str = "Calculation roots for" + item.getNumber();
+            String str = "Calculation roots for " + item.getNumber();
             holder.numberView.setText(str);
             holder.progressBar.setVisibility(View.VISIBLE);
-            holder.progressBar.setProgress(item.getProgress());
+            holder.progressBar.setProgress((int)((double)(item.getProgress() / item.getNumber()) * 100));
         }
 
         holder.deleteButton.setOnClickListener(view->{
             this.holder.deleteRoot(item);
+            WorkManager workManager = WorkManager.getInstance();
+            workManager.cancelWorkById(item.id);
             notifyDataSetChanged();
         });
 

@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class RootsHolder implements Serializable {
     List<RootCalc> rootList;
@@ -49,11 +50,12 @@ public class RootsHolder implements Serializable {
         try
         {
             String[] split = s.split("#");
-            long number = Long.parseLong(split[0]);
-            boolean status = Boolean.parseBoolean(split[1]);
-            String roots = split[2];
-            int progress = Integer.parseInt(split[3]);
-            RootCalc item = new RootCalc(number);
+            UUID id = UUID.fromString(split[0]);
+            long number = Long.parseLong(split[1]);
+            boolean status = Boolean.parseBoolean(split[2]);
+            String roots = split[3];
+            int progress = Integer.parseInt(split[4]);
+            RootCalc item = new RootCalc(id, number);
             item.setDone(status);
             item.setRoots(roots);
             item.setProgress(progress);
@@ -114,9 +116,49 @@ public class RootsHolder implements Serializable {
         this.rootsLiveDataMutable.setValue(this);
     }
 
+    public RootCalc getRoot(long number)
+    {
+        for (RootCalc r : rootList)
+        {
+            if (r.getNumber() == number)
+                return r;
+        }
+
+        return null;
+    }
+
+    public void setRoots(RootCalc r, String roots)
+    {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(itemToString(r));
+        editor.apply();
+
+        r.setRoots(roots);
+
+        editor.putString(itemToString(r), itemToString(r));
+        editor.apply();
+
+        rootsLiveDataMutable.setValue(this);
+
+    }
+
+    public void setProgress(RootCalc r, long prog)
+    {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(itemToString(r));
+        editor.apply();
+
+        r.setProgress(prog);
+
+        editor.putString(itemToString(r), itemToString(r));
+        editor.apply();
+
+        this.rootsLiveDataMutable.setValue(this);
+    }
+
     public String itemToString(RootCalc item)
     {
-        return item.getNumber() + "#" + item.isDone() + '#' + item.getRoots() + "#" + item.getProgress();
+        return item.id + "#" + item.getNumber() + "#" + item.isDone() + '#' + item.getRoots() + "#" + item.getProgress();
     }
     private static class RootComparator implements Comparator<RootCalc> {
         @Override

@@ -1,15 +1,19 @@
 package com.example.postpc_2021_ex8;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class RootCalc implements Serializable {
-    private long number;
+    public UUID id;
+    private final long number;
     private boolean status; //false = IN-PROGRESS, true = DONE
     private String roots;
-    int progress;
+    long progress;
 
-    public RootCalc(long number)
+
+    public RootCalc(UUID id, long number)
     {
+        this.id = id;
         this.number = number;
         this.status = false;
         this.roots = "prime number";
@@ -26,22 +30,11 @@ public class RootCalc implements Serializable {
         this.status = status;
     }
 
-    public void calculateRoots()
-    {
-        for(long i = 2; i <= (this.number / 2); i++)
-        {
-            if (this.number % i == 0)
-            {
-                this.roots = i + "x" + (this.number / i);
-                break;
-            }
-            this.progress = (int)(i / this.number);
-        }
-    }
     public void setRoots(String roots)
     {
         this.roots = roots;
     }
+
     public String getRoots()
     {
         if (!this.status)
@@ -57,12 +50,12 @@ public class RootCalc implements Serializable {
         return this.number;
     }
 
-    public int getProgress()
+    public long getProgress()
     {
         return this.progress;
     }
 
-    public void setProgress(int progress)
+    public void setProgress(long progress)
     {
         this.progress = progress;
     }
