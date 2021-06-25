@@ -165,7 +165,7 @@ public class RootsHolder implements Serializable {
         public int compare(RootCalc o1, RootCalc o2) {
 
             if (o1.isDone() == o2.isDone()) {
-                return 0;
+                return Long.compare(o1.getNumber(), o2.getNumber());
             }
 
             if (o1.isDone())

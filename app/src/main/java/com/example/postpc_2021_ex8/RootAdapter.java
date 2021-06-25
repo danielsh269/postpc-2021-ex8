@@ -47,15 +47,19 @@ public class RootAdapter extends RecyclerView.Adapter<ViewRootHolder> {
         {
             String str = "Calculation roots for " + item.getNumber();
             holder.numberView.setText(str);
+            holder.rootsView.setText("");
             holder.progressBar.setVisibility(View.VISIBLE);
-            holder.progressBar.setProgress((int)((double)(item.getProgress() / item.getNumber()) * 100));
+            int percent = (int) (100 * ((double) item.getProgress() / (item.getNumber() / 2)));
+            holder.progressBar.setProgress(percent);
         }
 
         holder.deleteButton.setOnClickListener(view->{
+            if (!item.isDone())
+            {
+                WorkManager workManager = WorkManager.getInstance(context);
+                workManager.cancelWorkById(item.id);
+            }
             this.holder.deleteRoot(item);
-            WorkManager workManager = WorkManager.getInstance();
-            workManager.cancelWorkById(item.id);
-            notifyDataSetChanged();
         });
 
 

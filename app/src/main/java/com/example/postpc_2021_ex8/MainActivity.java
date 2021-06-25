@@ -1,5 +1,6 @@
 package com.example.postpc_2021_ex8;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     RootsHolder holder = app.getDataHolder();
     WorkManager workManager = WorkManager.getInstance(this);
     Context c = this;
-
+    AddCalculationFragment acFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         //define of the add calculation fragment
         FragmentContainerView calcFrag = findViewById(R.id.calcFrag);
-        AddCalculationFragment acFrag = new AddCalculationFragment();
+        acFrag = new AddCalculationFragment();
         getSupportFragmentManager().beginTransaction().replace(calcFrag.getId(), acFrag).commit();
-
-
-
-
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         RootAdapter adapter = new RootAdapter(this, holder);
@@ -52,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
                 RootCalc num = holder.getRoot(n);
                 if (num != null)
                 {
-                    //TODO - make a toast that number already in the list and leave listener
+                    Toast.makeText(c, "number already in the list",Toast.LENGTH_SHORT).show();
+
                 }
                 else
                 {
-
 
                     OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(RootWorker.class)
                             .addTag("calculate_roots")
@@ -94,13 +92,43 @@ public class MainActivity extends AppCompatActivity {
                             holder.markRootDone(r);
                             adapter.notifyDataSetChanged();
                         }
-
                     }
+
+                    if (workInfo.getState() == WorkInfo.State.RUNNING)
+                    {
+                        Data data = workInfo.getProgress();
+                        long progress = data.getLong("progress", -1);
+                        long n = data.getLong("number", -1);
+                        RootCalc r = holder.getRoot(n);
+                        if (progress != -1)
+                        {
+                            holder.setProgress(r, progress);
+                        }
+                    }
+
                 }
             }
         });
 
+    }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!acFrag.getText(acFrag.getView()).equals(""))
+        {
+            long n = Long.parseLong(acFrag.getText(acFrag.getView()));
+            outState.putLong("number", n);
+        }
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null)
+        {
+            acFrag.setText(acFrag.getView(), Long.toString(savedInstanceState.getLong("number")));
+        }
     }
 }

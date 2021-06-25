@@ -32,6 +32,10 @@ public class RootWorker extends Worker{
 
     private long[] calculateRoots(long n)
     {
+        if (n == 1)
+        {
+            return new long[]{1,1};
+        }
         long start = System.currentTimeMillis();
         long curr = System.currentTimeMillis();
         long i = Math.max(2, this.r.getProgress());
@@ -44,7 +48,10 @@ public class RootWorker extends Worker{
             if (i == n / 2)
                 return new long[]{n, 1};
 
-            //this.holder.setProgress(this.r, i);
+            if (i % 1000000 == 0)
+            {
+                setProgressAsync(new Data.Builder().putLong("number", n).putLong("progress", i).build());
+            }
             i++;
             curr = System.currentTimeMillis();
         }
