@@ -27,7 +27,13 @@ public class RootsHolder implements Serializable {
         this.rootList = new ArrayList<>();
         this.sp = context.getSharedPreferences("local_db_roots", Context.MODE_PRIVATE);
         initializeFromSp();
+    }
 
+    public RootsHolder() // constructor for testing only
+    {
+        this.context = null;
+        this.rootList = new ArrayList<>();
+        this.sp = null;
     }
 
     private void initializeFromSp()
@@ -71,12 +77,14 @@ public class RootsHolder implements Serializable {
 
         this.rootList.add(item);
         Collections.sort(this.rootList, new RootComparator());
+        if (sp != null)
+        {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(itemToString(item), itemToString(item));
+            editor.apply();
+            this.rootsLiveDataMutable.setValue(this);
+        }
 
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(itemToString(item), itemToString(item));
-        editor.apply();
-
-        this.rootsLiveDataMutable.setValue(this);
     }
 
     public List<RootCalc> getCurrentList() {
@@ -108,12 +116,14 @@ public class RootsHolder implements Serializable {
     public void deleteRoot(RootCalc number) {
 
         this.rootList.remove(number);
+        if (sp != null)
+        {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.remove(itemToString(number));
+            editor.apply();
 
-        SharedPreferences.Editor editor = sp.edit();
-        editor.remove(itemToString(number));
-        editor.apply();
-
-        this.rootsLiveDataMutable.setValue(this);
+            this.rootsLiveDataMutable.setValue(this);
+        }
     }
 
     public RootCalc getRoot(long number)
